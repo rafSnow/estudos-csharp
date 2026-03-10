@@ -30,6 +30,8 @@ const PHASE_GRADIENTS = {
   phase1: `linear-gradient(90deg, ${COLORS.m1}, ${COLORS.m2}, ${COLORS.m3}, ${COLORS.m4})`,
   phase2: `linear-gradient(90deg, ${COLORS.m5}, ${COLORS.m6}, ${COLORS.m7}, ${COLORS.m8})`,
   phase3: `linear-gradient(90deg, ${COLORS.m9}, ${COLORS.m10}, ${COLORS.m11}, ${COLORS.m12})`,
+  phase4: `linear-gradient(90deg, ${COLORS.m13}, ${COLORS.m14}, ${COLORS.m15}, ${COLORS.m16})`,
+  phase5: `linear-gradient(90deg, ${COLORS.m17}, ${COLORS.m18}, ${COLORS.m19}, ${COLORS.m20})`,
 };
 
 export default function PhaseProgress({

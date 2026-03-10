@@ -82,6 +82,8 @@ export default function App() {
 
   const prevPhase1DoneRef = useRef(false);
   const prevPhase2DoneRef = useRef(false);
+  const prevPhase3DoneRef = useRef(false);
+  const prevPhase4DoneRef = useRef(false);
 
   const currentModule = currentTopicId
     ? getModuleByTopicId(currentTopicId, allModules)
@@ -132,6 +134,14 @@ export default function App() {
     prevPhase2DoneRef.current = phase2Topics.every((t) =>
       initialState.completed.includes(t.id),
     );
+    const phase3Topics = getAllTopicsFlat(ALL_PHASES[2].data);
+    prevPhase3DoneRef.current = phase3Topics.every((t) =>
+      initialState.completed.includes(t.id),
+    );
+    const phase4Topics = getAllTopicsFlat(ALL_PHASES[3].data);
+    prevPhase4DoneRef.current = phase4Topics.every((t) =>
+      initialState.completed.includes(t.id),
+    );
 
     setHydrated(true);
   }, [loading, hydrated, initialState, initAwarded, allModules]);
@@ -148,9 +158,13 @@ export default function App() {
     const p1 = completedTopics.filter((id) => /^m[1-4]/.test(id));
     const p2 = completedTopics.filter((id) => /^m[5-8]/.test(id));
     const p3 = completedTopics.filter((id) => /^m(9|1[0-2])/.test(id));
+    const p4 = completedTopics.filter((id) => /^m1[3-6]/.test(id));
+    const p5 = completedTopics.filter((id) => /^m(17|18|19|20)/.test(id));
     saveItem(STORAGE.completed, p1);
     saveItem(STORAGE.phase2Completed, p2);
     saveItem(STORAGE.phase3Completed, p3);
+    saveItem(STORAGE.phase4Completed, p4);
+    saveItem(STORAGE.phase5Completed, p5);
   }, [completedTopics, hydrated, saveItem]);
 
   useEffect(() => {
@@ -287,6 +301,37 @@ export default function App() {
           }
         }
 
+        // Check phase 4 unlock
+        if (!prevPhase3DoneRef.current && prevPhase2DoneRef.current) {
+          const phase3Topics = getAllTopicsFlat(ALL_PHASES[2].data);
+          const phase3Done = phase3Topics.every(
+            (t) => t.id === currentTopicId || updated.includes(t.id),
+          );
+          if (phase3Done) {
+            prevPhase3DoneRef.current = true;
+            addToast("🎉 Fase 4 Desbloqueada! Testes Automatizados", "unlock");
+            setJustUnlockedPhase("phase4");
+            setTimeout(() => setJustUnlockedPhase(null), 2000);
+          }
+        }
+
+        // Check phase 5 unlock
+        if (!prevPhase4DoneRef.current && prevPhase3DoneRef.current) {
+          const phase4Topics = getAllTopicsFlat(ALL_PHASES[3].data);
+          const phase4Done = phase4Topics.every(
+            (t) => t.id === currentTopicId || updated.includes(t.id),
+          );
+          if (phase4Done) {
+            prevPhase4DoneRef.current = true;
+            addToast(
+              "🎉 Fase 5 Desbloqueada! Segurança & Autenticação",
+              "unlock",
+            );
+            setJustUnlockedPhase("phase5");
+            setTimeout(() => setJustUnlockedPhase(null), 2000);
+          }
+        }
+
         addToast("🔓 Novo tópico desbloqueado", "unlock");
         return updated;
       });
@@ -312,12 +357,16 @@ export default function App() {
     setDashboardOpen(false);
     prevPhase1DoneRef.current = false;
     prevPhase2DoneRef.current = false;
+    prevPhase3DoneRef.current = false;
+    prevPhase4DoneRef.current = false;
 
     // Clear all storage keys
     saveItem(STORAGE.currentTopic, null);
     saveItem(STORAGE.completed, []);
     saveItem(STORAGE.phase2Completed, []);
     saveItem(STORAGE.phase3Completed, []);
+    saveItem(STORAGE.phase4Completed, []);
+    saveItem(STORAGE.phase5Completed, []);
     saveItem(STORAGE.xp, 0);
 
     for (const phase of ALL_PHASES) {
@@ -366,6 +415,7 @@ export default function App() {
           <div style={styles.mainInner}>
             {currentTopic && currentModule ? (
               <TopicView
+                key={currentTopicId}
                 topic={currentTopic}
                 module={currentModule}
                 completedTopics={completedTopics}
