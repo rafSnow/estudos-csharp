@@ -2,11 +2,13 @@ export { FASE1_DATA } from "./fase1/index";
 export { FASE2_DATA } from "./fase2/index";
 export { FASE3_DATA } from "./fase3/index";
 export { FASE4_DATA } from "./fase4/index";
+export { FASE5_DATA } from "./fase5/index";
 
 import { FASE1_DATA } from "./fase1/index";
 import { FASE2_DATA } from "./fase2/index";
 import { FASE3_DATA } from "./fase3/index";
 import { FASE4_DATA } from "./fase4/index";
+import { FASE5_DATA } from "./fase5/index";
 
 export const ALL_PHASES = [
   {
@@ -40,5 +42,13 @@ export const ALL_PHASES = [
     data: FASE4_DATA,
     color: "#EF4444",
     weeks: "Semanas 13–15",
+  },
+  {
+    id: "phase5",
+    title: "Fase 5",
+    subtitle: "Segurança & Autenticação",
+    data: FASE5_DATA,
+    color: "#F59E0B",
+    weeks: "Semanas 16–17",
   },
 ];
